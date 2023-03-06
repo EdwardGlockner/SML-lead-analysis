@@ -1,3 +1,5 @@
+##########################################################
+## IMPORTS
 from sklearn.feature_selection import f_regression
 import numpy as np
 import pandas as pd
@@ -6,12 +8,21 @@ sns.set(rc={'figure.figsize':(12,8)})
 import os
 import sys
 from collinearity import SelectNonCollinear
-### CHECKING FOLDERS ###
+
+##########################################################
+## FIXING PATH
 dirname = os.getcwd()
 dirname = dirname.replace("/models/boosting", "")
 sys.path.insert(1,os.path.join(dirname, "general_classes"))
+
+##########################################################
+## LOCAL PACKAGES
 from DataPreparation import DataPreparation
 
+"""
+Plot of colinearity
+
+"""
 path_data = dirname + "/data/train.csv"
 drop_cols = []
 DataPrep = DataPreparation(path_data, numpy_bool = False, drop_cols = drop_cols, gender=False)

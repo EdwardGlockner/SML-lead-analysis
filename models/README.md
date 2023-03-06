@@ -6,5 +6,3 @@
 - QDA: S. Fredriksson
 - Treebased: M. Marminge
 - Boosting: E. Glöckner
-
-- DNN: Collaborative

@@ -1,5 +1,9 @@
+##########################################################
+## IMPORTS
 import numpy as np
 
+##########################################################
+## DECISIONSTUMP CLASS
 class DecisionStump():
     def __init__(self):
         self.polarity = 1 # sample should be classified as -1 or +1 for the given threshold

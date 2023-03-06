@@ -1,25 +1,30 @@
-### IMPORTS ###
+##########################################################
+## IMPORTS
 import numpy as np
 import sys
 import os
-sys.path.append(str(sys.path[0][:-14]))
+from imblearn.over_sampling import SMOTE
 
-### CHECKING FOLDERS ###
+##########################################################
+## FIXING PATH
+sys.path.append(str(sys.path[0][:-14]))
 dirname = os.getcwd()
 dirname = dirname.replace("/models/boosting/mains", "")
 sys.path.insert(1,os.path.join(dirname, "general_classes"))
+
+##########################################################
+## LOCAL PACKAGES
 from DataPreparation import DataPreparation
 from Performance import Performance
 sys.path.insert(1, os.path.join(dirname, "models/boosting"))
 from AdaBoost import AdaBoost
-from imblearn.over_sampling import SMOTE
 
-### GLOBALS ###
+##########################################################
+## GLOBALS
 clear = lambda : os.system("cls")
 
-### MAIN ###
-
-
+##########################################################
+## MAIN
 def main():
 
     # Fix data
@@ -34,19 +39,16 @@ def main():
     X_res, Y_res = sm.fit_resample(X_train, Y_train)
     X_train = np.concatenate((X_train, X_res))
     Y_train = np.concatenate((Y_train, Y_res))
-     
     
     # Merge all the data
     X_train = np.concatenate((X_train, X_res))
     Y_train = np.concatenate((Y_train, Y_res))
-    
     
     # AdaBoost ML algortihm using 5 weak classifiers
 
     clf = AdaBoost(n_clf=5)
     clf.fit(X_train, Y_train)
     y_pred = clf.predict(X_test)
-
 
     # Analyze performance
     Perfor = Performance(y_pred, Y_test)
@@ -58,8 +60,7 @@ def main():
     cohen = Perfor.cohen()
     roc = Perfor.roc()
 
-    print("Performance metrix\t\t")
-    
+    print("Performance metrix\t\t") 
     print(f"Accuracy: \t{accuracy}")
     print(f"Precision: \t{precision}")
     print(f"Recall: \t{recall}")
@@ -68,6 +69,9 @@ def main():
     print(f"Cohen: \t{cohen}")
     print(f"Roc: \t{roc}")
 
+
+##########################################################
+## RUN CODE
 if __name__ == "__main__":
     main()
 

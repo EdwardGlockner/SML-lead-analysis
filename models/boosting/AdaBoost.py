@@ -1,6 +1,11 @@
+##########################################################
+## IMPORTS
+
 import numpy as np
 from DecisionStump import DecisionStump
 
+##########################################################
+## ADABOOST CLASS
 class AdaBoost():
     def __init__(self,n_clf=5):
         """

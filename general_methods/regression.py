@@ -20,6 +20,8 @@ def lin_reg(xdata, ydata):
     
     return [Z@Xt@Y, X]       # (X'X)**(-1)X'Y
 
+
+## deprecated function
 def log_reg(xdata, ydata):
     
     def local_exponent(theta, x):

@@ -15,6 +15,7 @@ bar = "##################################################"
 ## PERFORMANCE CLASS
 
 class Performance():
+    """This class is for evaluating the performance of the different models"""
     def __init__(self, Y_pred, Y_true, gender=False):
         self.Y_pred = Y_pred
         self.Y_true = Y_true
@@ -72,6 +73,8 @@ class Performance():
     
 ##########################################################
 ## OUTSIDE FUNCTIONS
+
+# these are used to easily format and print the dicts containing the metrics
 
 # printing the data dict
 def print_combination(data):

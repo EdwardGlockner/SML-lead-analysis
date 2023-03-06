@@ -56,46 +56,6 @@ def normal_pred():
     perf = Performance(y_pred,Y_test)
     print(f"Kappa: {perf.cohen()}")
 
-
-def cross_val():
-    # Set data
-    path = dirname + "/data/train.csv"
-    DataPrep = DataPreparation(path, numpy_bool = True, gender = False)
-    X_train, X_test, Y_train, Y_test = DataPrep.get_sets()
-
-    # Normalize the data
-    scaler = preprocessing.StandardScaler().fit(X_train)
-    X_train = scaler.transform(X_train)
-    X_test = scaler.transform(X_test)
-    
-    # Use data augmentation
-    sm = SMOTE(k_neighbors = 5)
-    X_res, Y_res = sm.fit_resample(X_train, Y_train)
-    X_train = np.concatenate((X_train, X_res))
-    Y_train = np.concatenate((Y_train, Y_res))
-    
-    # Merge all the sets
-    X_train = np.concatenate((X_train, X_test))
-    Y_train = np.concatenate((Y_train, Y_test))
-    
-    # Use k-fold cross validation
-    qda = LinearDiscriminantAnalysis()
-    model = qda.fit(X_train, Y_train)
-    cv = RepeatedStratifiedKFold(n_splits=10, n_repeats=3)
-    scores = cross_val_score(model, X_train , Y_train, scoring="accuracy", cv=cv)
-    for i in range(len(scores)):
-        print(f"Iteration: {i}, accuracy: \t {scores[i]}")
-
-    print(f"\nMean accuracy: \t {np.mean(scores)}")
-    
-    # Check which reg_param is the best
-    params = [{'reg_param': np.linspace(0,1,100)}]
-    Grids = GridSearchCV(qda, params, cv=4)
-    Grids.fit(X_train, Y_train)
-    reg_params = Grids.best_params_['reg_param']
-    print("Best reg_param for model is " + str(reg_params))
-
-
 def evaluation_cross_val(n_folds = 10):
     # Get the data sets
     path = dirname + "/data/train.csv"
@@ -137,13 +97,36 @@ def evaluation_cross_val(n_folds = 10):
     print("\r\n")
     print_combination(data)
 
+##########################################################
+## GRIDSEARCH
+
+def tuning():
+    
+    dp = DataPreparation("./data/train.csv", clean=True)
+    
+    # combines the data due to the usage of k_fold
+    X_train, X_test, Y_train, Y_test = dp.get_sets()    
+    X_train = np.concatenate((X_train, X_test))
+    Y_train = np.concatenate((Y_train, Y_test))
+    
+    # Hyperparameters that could be useful to tune
+    solver = ["svd", "lsqr", "eigen"]
+    
+    hyperpara = dict(solver = solver)
+    
+    print("tuning...")
+    model = GridSearchCV(LinearDiscriminantAnalysis(), hyperpara, cv=10, refit='balanced_accuracy', verbose=1, n_jobs=-1)     
+
+    model.fit(X_train, Y_train)
+    print("Tuned parameters: ")
+    print(model.best_params_)
 
 ##########################################################
 ## MAIN
 
 def main():
     normal_pred()
-    evaluation_cross_val() 
+    evaluation_cross_val()
 
 ##########################################################
 ## RUN CODE    

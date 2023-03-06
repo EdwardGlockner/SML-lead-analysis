@@ -2,6 +2,7 @@
 ## IMPORTS
 
 import os
+import sys
 from time import sleep
 
 ############################################################
@@ -30,7 +31,13 @@ print("Import of local packages done!")
 ## GLOBALS
 
 # function that clears the terminal
-clear = lambda : os.system('cls')
+try:
+    if sys.platform == "darwin": # macOS
+        clear = lambda : os.system('clear')
+    else:
+        clear = lambda : os.system('cls')
+except OSError as e:
+    print("Error identifying operating system")
 
 bar = "************************************************************"
 

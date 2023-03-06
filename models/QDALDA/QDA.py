@@ -110,7 +110,6 @@ def evaluation_cross_val(n_folds = 10):
     
     data = get_dict()   # data dict
     
-    
     cross_val = KFold(n_splits = n_folds, shuffle= True, random_state=False)
 
     print("Calculating ","0%",end="\r")
@@ -125,6 +124,11 @@ def evaluation_cross_val(n_folds = 10):
         X_train_loop = np.concatenate((X_train_loop, X_res))
         Y_train_loop = np.concatenate((Y_train_loop, Y_res))
         
+        # Normalize the data
+        scaler = preprocessing.StandardScaler().fit(X_train_loop)
+        X_train_loop = scaler.transform(X_train_loop)
+        X_val_loop = scaler.transform(X_val_loop)
+        
         model = qda.fit(X_train_loop, Y_train_loop)
 
         Y_pred_loop = model.predict(X_val_loop)
@@ -137,13 +141,12 @@ def evaluation_cross_val(n_folds = 10):
     print("\r\n")
     print_combination(data)
 
-
 ##########################################################
 ## MAIN
 
 def main():
-    normal_pred()
-    evaluation_cross_val() 
+    # normal_pred()
+    evaluation_cross_val()
 
 ##########################################################
 ## RUN CODE    

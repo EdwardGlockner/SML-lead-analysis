@@ -5,9 +5,9 @@ import numpy as np
 
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import KFold
-from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis as QDA
 from sklearn import preprocessing
 from imblearn.over_sampling import SMOTE
+from sklearn.model_selection import GridSearchCV
 
 ##########################################################
 ## FIXING PATH
@@ -20,6 +20,40 @@ sys.path.append('.')
 
 from general_classes import *
 
+##########################################################
+## GRIDSEARCH
+
+def tuning():
+    
+    dp = DataPreparation("./data/train.csv", clean=True)
+    
+    # combines the data due to the usage of k_fold
+    X_train, X_test, Y_train, Y_test = dp.get_sets()    
+    X_train = np.concatenate((X_train, X_test))
+    Y_train = np.concatenate((Y_train, Y_test))
+    
+    # Hyperparameters that could be useful to tune
+    criterion = ["gini", "entropy", "log_loss"]
+    max_depth = [60, 70, 80, 90, 100, None]
+    min_samples_split = [2,5,10]
+    min_samples_leaf = [1,2,4]
+    min_weight_fraction_leaf = [0.0, 0.5, 0.7, 1]
+    # max_features = ["sqrt", "auto", None]
+    max_leaf_nodes = [100, 200, None]
+    min_impurity_decrease = [0.0, 0.5, 0.7, 1]
+
+    hyperpara = dict(criterion=criterion, max_depth = max_depth, min_samples_split = min_samples_split,\
+        min_samples_leaf = min_samples_leaf, min_weight_fraction_leaf = min_weight_fraction_leaf, max_leaf_nodes = max_leaf_nodes,\
+        min_impurity_decrease = min_impurity_decrease)
+    
+    print("tuning...")
+    model = GridSearchCV(RandomForestClassifier(n_estimators=100,bootstrap=True, max_features="auto"), hyperpara, cv=10, refit='balanced_accuracy', verbose=1, n_jobs=-1)     
+
+    model.fit(X_train, Y_train)
+    print("Tuned parameters: ")
+    print(model.best_params_)
+    
+    
 ##########################################################
 ## MAIN
 
@@ -64,7 +98,7 @@ def main():
         temp_Y = np.concatenate((temp_Y, Y_res))
         
         # RFC using max cores
-        model = RandomForestClassifier(n_estimators=100,n_jobs=-1, bootstrap=True)        
+        model = RandomForestClassifier(n_estimators=100,n_jobs=-1, bootstrap=True, criterion="gini", max_depth=60, max_leaf_nodes=100, min_samples_leaf=2)        
         model.fit(temp_X, temp_Y)
         
         # predicting using the SMOTE-trained model on non-SMOTEd data
@@ -85,3 +119,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    # tuning()

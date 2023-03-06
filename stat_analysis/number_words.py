@@ -37,6 +37,7 @@ bar = "************************************************************"
 ## FUNCTIONS
 
 def bin_roles(data):
+    """This function evaluates the relationship between major speaking roles and actor gender"""
     
     numb_actors = data[["Number of male actors", "Number of female actors"]].values.tolist()
     
@@ -93,6 +94,7 @@ def bin_roles(data):
     print(bar)
     
 def roles_years(data):
+    """This function evaluates the relationship between speaking role gender and time"""
     
     role_data = data[["Number of male actors", "Number of female actors", "Year"]].sort_values(by="Year").values.tolist()
     years = [entry[2] for entry in role_data]
@@ -142,6 +144,7 @@ def roles_years(data):
     
     
 def words_gross(data):
+    """This function evaluates the relationship between the grossing of the movie and the amount of female words"""
     
     role_data = data[["Total words", "Number words female", "Gross"]].sort_values(by="Number words female").values.tolist()
     gross = [entry[2] for entry in role_data]
@@ -190,6 +193,7 @@ def words_gross(data):
     words_gross_M(data)
     
 def words_gross_M(data):
+    """This function evaluates the relationship between the grossing of the movie and the amount of male words"""
     
     role_data = data[["Total words", "Number words male", "Gross"]].sort_values(by="Number words male").values.tolist()
     gross = [entry[2] for entry in role_data]
@@ -238,6 +242,8 @@ def words_gross_M(data):
     words_frac(data)
 
 def words_frac(data):
+    """This function evaluates the relationship between the grossing of the movie and the fraction of female words"""
+    
     role_data = data[["Total words", "Number words female", "Gross", "Lead", "Number of words lead"]].values.tolist()
     gross = [entry[2] for entry in role_data]
     frac = [entry[1]/entry[0]  if entry[3] == "Male" else (entry[1] + entry[4])/entry[0] for entry in role_data]
@@ -284,6 +290,8 @@ def words_frac(data):
     words_frac_M(data)
     
 def words_frac_M(data):
+    """This function evaluates the relationship between the grossing of the movie and the fraction of male words"""
+    
     role_data = data[["Total words", "Number words male", "Gross", "Lead", "Number of words lead"]].values.tolist()
     gross = [entry[2] for entry in role_data]
     frac = [entry[1]/entry[0]  if entry[3] == "Female" else (entry[1] + entry[4])/entry[0] for entry in role_data]
@@ -331,6 +339,7 @@ def words_frac_M(data):
 ## FOR USER INPUT
 
 def words_user(choices):
+    """This function is for the user input from the ../main.py"""
     
     def _gender(data):
         print("### MAJOR ROLE BY GENDER ###")

@@ -12,6 +12,8 @@ The purpose of this method is to limit the colinearity of the features in the da
 
 ## Performance
 
-## Tree
+This class makes sure that the performance is calculated in a uniform capacity.
 
-## PCA
+## Deprecated Classes
+
+Both PCA and Tree are classes that have been deprecated. They are still included in the source code for legacy.
